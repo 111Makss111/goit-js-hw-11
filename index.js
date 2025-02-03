@@ -1,29 +1,22 @@
-import{i as d,S as h}from"./assets/vendor-B2mb6eXk.js";(function(){const o=document.createElement("link").relList;if(o&&o.supports&&o.supports("modulepreload"))return;for(const e of document.querySelectorAll('link[rel="modulepreload"]'))a(e);new MutationObserver(e=>{for(const t of e)if(t.type==="childList")for(const i of t.addedNodes)i.tagName==="LINK"&&i.rel==="modulepreload"&&a(i)}).observe(document,{childList:!0,subtree:!0});function r(e){const t={};return e.integrity&&(t.integrity=e.integrity),e.referrerPolicy&&(t.referrerPolicy=e.referrerPolicy),e.crossOrigin==="use-credentials"?t.credentials="include":e.crossOrigin==="anonymous"?t.credentials="omit":t.credentials="same-origin",t}function a(e){if(e.ep)return;e.ep=!0;const t=r(e);fetch(e.href,t)}})();const n=document.querySelector(".js-search"),c=document.querySelector(".gallery"),l=document.querySelector(".loader");l.style.display="none";n.addEventListener("submit",f);function f(s){s.preventDefault(),c.innerHTML="",l.style.display="block";const o=s.target.elements.search.value;p(o).then(r=>{l.style.display="none",r.hits.length||d.error({title:"Error",message:"Sorry, there are no images matching your search query. Please try again!"}),c.innerHTML=m(r.hits),new h(".gallery a",{captions:!0,captionsData:"alt",captionDelay:250}).refresh(),n.reset()}).catch(r=>{l.style.display="none",console.log(r)})}function p(s){const o="https://pixabay.com/api/",r="40891115-11d0b88dd3a60afc830d1d27f";s.includes(" ")&&s.replace(/\s+/g,"+");const a=new URLSearchParams({key:r,q:s,image_type:"photo",orientation:"horizontal",safesearch:!0});return fetch(`${o}?${a}`).then(e=>{if(!e.ok)throw new Error(e.statusText);return e.json()})}function m(s){return s.map(({webformatURL:o,largeImageURL:r,tags:a,likes:e,views:t,comments:i,downloads:u})=>`<li class="gallery-item">
-          <a class="gallery-link" href="${r}">
-            <img
-              class="gallery-image"
-              src="${o}"
-              alt="${a}"
-              width="360"
-            />
-          </a>
-          <div class="thumb-block">
-            <div class="block">
-              <h2 class="tittle">Likes</h2>
-              <p class="amount">${e}</p>
+import{i as a,S as d}from"./assets/vendor-B2mb6eXk.js";(function(){const t=document.createElement("link").relList;if(t&&t.supports&&t.supports("modulepreload"))return;for(const e of document.querySelectorAll('link[rel="modulepreload"]'))i(e);new MutationObserver(e=>{for(const r of e)if(r.type==="childList")for(const n of r.addedNodes)n.tagName==="LINK"&&n.rel==="modulepreload"&&i(n)}).observe(document,{childList:!0,subtree:!0});function s(e){const r={};return e.integrity&&(r.integrity=e.integrity),e.referrerPolicy&&(r.referrerPolicy=e.referrerPolicy),e.crossOrigin==="use-credentials"?r.credentials="include":e.crossOrigin==="anonymous"?r.credentials="omit":r.credentials="same-origin",r}function i(e){if(e.ep)return;e.ep=!0;const r=s(e);fetch(e.href,r)}})();const f="46829059-b190e2d34be3baff3edaad1bd",u="https://pixabay.com/api/";async function m(o){const t=await fetch(`${u}?key=${f}&q=${o}&image_type=photo&orientation=horizontal&safesearch=true`);if(!t.ok)throw new Error("Failed to fetch images");return(await t.json()).hits}const p=o=>{const t=document.querySelector(".gallery");if(t.innerHTML="",o.length===0){a.error({title:"Error",message:"Sorry, there are no images matching your search query. Please try again!",position:"topRight"});return}const s=o.map(e=>`
+            <div class="photo-card">
+                <a href="${e.largeImageURL}">
+                    <img src="${e.webformatURL}" alt="${e.tags}" />
+                </a>
+                <div class="info">
+                    <i class="info-item">
+                        <b>Likes</b> ${e.likes}
+                    </i>
+                    <p class="info-item">
+                        <b>Views</b> ${e.views}
+                    </p>
+                    <p class="info-item">
+                        <b>Comments</b> ${e.comments}
+                    </p>
+                    <p class="info-item">
+                        <b>Downloads</b> ${e.downloads}
+                    </p>
+                </div>
             </div>
-            <div class="block">
-              <h2 class="tittle">Views</h2>
-              <p class="amount">${t}</p>
-            </div>
-            <div class="block">
-              <h2 class="tittle">Comments</h2>
-              <p class="amount">${i}</p>
-            </div>
-            <div class="block">
-              <h2 class="tittle">Downloads</h2>
-              <p class="amount">${u}</p>
-            </div>
-          </div>
-        </li>`).join("")}
+        `).join("");t.insertAdjacentHTML("beforeend",s),new d(".gallery a").refresh()},c=document.querySelector("#search-form"),l=document.querySelector(".loader");c.addEventListener("submit",async o=>{o.preventDefault();const t=c.elements.query,s=t.value.trim();if(s===""){a.error({title:"Error",message:"Please enter a search term.",position:"topRight"});return}t.value="",l.classList.remove("hidden"),m(s).then(i=>{p(i)}).catch(i=>{console.error(i),a.error({title:"Error",message:"Failed to fetch images.",position:"topRight"})}).finally(()=>{l.classList.add("hidden")})});
 //# sourceMappingURL=index.js.map
