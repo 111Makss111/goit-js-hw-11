@@ -1,37 +1,43 @@
-import { fetchImages } from './js/pixabay-api.js';
-import { displayImages, displayToast } from './js/render-functions.js';
+import iziToast from "izitoast";
+import "izitoast/dist/css/iziToast.min.css";
 
-const searchForm = document.querySelector('form');
-const gallery = document.querySelector('.gallery');
+import { fetchPhotosByQuery } from "./js/pixabay-api";
+import { renderImages } from "./js/render-functions";
+
+const form = document.querySelector('.search-form');
+const searchInput = document.querySelector('.search-images');
 const loader = document.querySelector('.loader');
 
-searchForm.addEventListener('submit', async event => {
-  event.preventDefault();
-  gallery.innerHTML = '';
-  loader.classList.remove('is-hidden');
-
-  const searchData = event.target.elements.search_input.value.trim();
-  if (searchData === '') {
-    displayToast('All form fields must be filled in', 'warning');
-    loader.classList.add('is-hidden');
-    return;
-  }
-
-  try {
-    const images = await fetchImages(searchData);
-    if (images.total === 0) {
-      displayToast('Sorry, no images found. Please try again!', 'error');
-    } else {
-      displayImages(images.hits, gallery);
+document.addEventListener('DOMContentLoaded', () => {
+  form.addEventListener('submit', function(event) {
+    event.preventDefault();
+    const value = searchInput.value.trim();
+    if (value === '') {
+      alert('Please enter a search term!');
+      return;
     }
-  } catch (error) {
-    console.error('Error fetching images:', error);
-    displayToast(
-      'An error occurred while fetching images. Please try again later.',
-      'error'
-    );
-  } finally {
-    searchForm.reset();
-    loader.classList.add('is-hidden');
-  }
+
+    loader.style.display = 'block';
+
+    fetchPhotosByQuery(value)
+      .then(data => {
+        if (data.hits.length === 0) {
+          iziToast.error({
+            title: 'Error!',
+            message:
+              'Sorry, there are no images matching your search query. Please try again!',
+            position: 'topRight',
+          });
+        }
+        renderImages(data.hits);
+      })
+
+      .catch(error => {
+        console.error('Error fetching images:', error);
+        throw error;
+      }).finally(() => {
+      loader.style.display = 'none';
+    });
+    searchInput.value = '';
+  });
 });

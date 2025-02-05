@@ -1,43 +1,41 @@
-'use strict';
-import iziToast from 'izitoast';
-import 'izitoast/dist/css/iziToast.min.css';
-import SimpleLightbox from 'simplelightbox';
-import 'simplelightbox/dist/simple-lightbox.min.css';
+import SimpleLightbox from "simplelightbox";
+import "simplelightbox/dist/simple-lightbox.min.css";
 
-export function displayImages(images, gallery) {
-  const markup = images
-    .map(
-      image => `
-        <li class="gallery-item">
-            <a class="gallery-link" href="${image.largeImageURL}">
-                <div class="full-image" class="loader">
-                    <img class="gallery-image" src="${image.webformatURL}" alt="${image.tags}">
-                    <ul class="image-button">
-                        <li><p class="info-name">Likes</p><p>${image.likes}</p></li>
-                        <li><p class="info-name">Views</p><p>${image.views}</p></li>
-                        <li><p class="info-name">Comments</p><p>${image.comments}</p></li>
-                        <li><p class="info-name">Downloads</p><p>${image.downloads}</p></li>
-                        </ul>
-                </div>
-            </a>
-        </li>
-    `
-    )
-    .join('');
-  gallery.innerHTML = markup;
+export function renderImages(images) {
+  const photoGallery = document.querySelector('.gallery');
+  photoGallery.innerHTML = '';
 
-  const lightbox = new SimpleLightbox('.gallery a', {
+    const cardMarkup = images.map(
+        ({
+            webformatURL,
+            largeImageURL,
+            tags,
+            likes,
+            views,
+            comments,
+            downloads,
+        }) =>
+            `<li class="gallery-item">
+            <a href = "${largeImageURL}">
+        <img src="${webformatURL}" alt="${tags}"/>
+    <ul class="gallery-info">
+        <li>Likes<p>${likes}</p></li>
+        <li>Views<p>${views}</p></li>
+        <li>Comments<p>${comments}</p></li>
+        <li>Downloads<p>${downloads}</p></li>
+    </ul>
+    </a>
+    </li>`
+        
+    ).join('');
+
+    photoGallery.insertAdjacentHTML('beforeend', cardMarkup);
+
+  const optionsGallery = {
     captionsData: 'alt',
     captionDelay: 250,
-  });
-  lightbox.refresh();
-}
+  };
 
-export function displayToast(message, type) {
-  iziToast[type]({
-    message,
-    messageColor: 'white',
-    position: 'topRight',
-    backgroundColor: 'red',
-  });
+  let gallery = new SimpleLightbox('.gallery a', optionsGallery);
+  gallery.refresh();
 }
