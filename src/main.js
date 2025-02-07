@@ -30,14 +30,17 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         renderImages(data.hits);
       })
-
       .catch(error => {
-        console.error('Error fetching images:', error);
+        iziToast.error({
+          message: `Error fetching images: ${error.message}`,
+          position: 'topRight',
+        });
         throw error;
       })
       .finally(() => {
         loader.style.display = 'none';
       });
+
     searchInput.value = '';
   });
 });
